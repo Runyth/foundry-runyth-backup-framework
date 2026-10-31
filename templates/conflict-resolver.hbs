@@ -1,0 +1,25 @@
+<div class="rbf-conflict-shell">
+  <header class="rbf-conflict-heading"><h2>{{moduleTitle}}</h2><p>{{localize "RBF.Conflict.Intro"}}</p></header>
+  <div class="rbf-conflict-layout">
+    <aside class="rbf-category-list rbf-scroll">
+      {{#each categories}}
+      <section class="rbf-category-rule" data-category="{{key}}" style="--rbf-depth: {{depth}}"><strong title="{{fullLabel}}">{{label}}</strong><div class="rbf-rule-actions"><button type="button" data-action="applyRule" data-resolution="keep">{{localize "RBF.Conflict.KeepBranch"}}</button><button type="button" data-action="applyRule" data-resolution="merge">{{localize "RBF.Conflict.MergeBranch"}}</button><button type="button" data-action="applyRule" data-resolution="import">{{localize "RBF.Conflict.ImportBranch"}}</button></div></section>
+      {{/each}}
+    </aside>
+    <main class="rbf-conflict-list rbf-scroll">
+      {{#each conflicts}}
+      <article class="rbf-card rbf-conflict-card">
+        <header><div><strong>{{label}}</strong><small>{{category}} · {{state}}</small></div><code>{{id}}</code></header>
+        <dl class="rbf-conflict-meta"><div><dt>{{localize "RBF.Conflict.ArchivePath"}}</dt><dd><code>{{archivePath}}</code></dd></div><div><dt>{{localize "RBF.Conflict.LiveTarget"}}</dt><dd><code>{{target}}</code></dd></div><div><dt>{{localize "RBF.Conflict.Reason"}}</dt><dd>{{reason}}</dd></div></dl>
+        <div class="rbf-diff"><div><b>{{localize "RBF.Conflict.Live"}}</b><pre>{{live}}</pre></div><div><b>{{localize "RBF.Conflict.Incoming"}}</b><pre>{{incoming}}</pre></div></div>
+        <div class="rbf-resolution">
+          {{#if allowKeep}}<button type="button" data-action="resolve" data-entry-id="{{id}}" data-resolution="keep" class="{{#if isKeep}}active{{/if}}">{{localize "RBF.Conflict.KeepLive"}}</button>{{/if}}
+          {{#if allowMerge}}<button type="button" data-action="resolve" data-entry-id="{{id}}" data-resolution="merge" class="{{#if isMerge}}active{{/if}}">{{localize "RBF.Conflict.Merge"}}</button>{{/if}}
+          {{#if allowImport}}<button type="button" data-action="resolve" data-entry-id="{{id}}" data-resolution="import" class="{{#if isImport}}active{{/if}}">{{localize "RBF.Conflict.UseImport"}}</button>{{/if}}
+        </div>
+      </article>
+      {{/each}}
+    </main>
+  </div>
+  <footer class="rbf-dialog-footer"><button type="button" data-action="cancel">{{localize "RBF.Common.CancelNoChanges"}}</button><button type="button" data-action="reset">{{localize "RBF.Common.Reset"}}</button><button type="button" data-action="continue">{{localize "RBF.Common.Continue"}}</button></footer>
+</div>

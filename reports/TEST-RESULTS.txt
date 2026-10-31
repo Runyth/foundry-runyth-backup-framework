@@ -1,0 +1,82 @@
+TAP version 13
+# Subtest: ZIP32 STORE round-trips deterministic entries
+ok 1 - ZIP32 STORE round-trips deterministic entries
+  ---
+  duration_ms: 2.13449
+  type: 'test'
+  ...
+# Subtest: ZIP parser rejects path traversal and trailing data
+ok 2 - ZIP parser rejects path traversal and trailing data
+  ---
+  duration_ms: 0.455546
+  type: 'test'
+  ...
+# Subtest: retention parser and tiering keep newest sample per bucket
+ok 3 - retention parser and tiering keep newest sample per bucket
+  ---
+  duration_ms: 1.125301
+  type: 'test'
+  ...
+# Subtest: registry validates conflicts and dependencies
+ok 4 - registry validates conflicts and dependencies
+  ---
+  duration_ms: 0.816283
+  type: 'test'
+  ...
+# Subtest: merge strategies are deterministic
+ok 5 - merge strategies are deterministic
+  ---
+  duration_ms: 0.373815
+  type: 'test'
+  ...
+# Subtest: audit store seals, chains, verifies and detects tampering
+ok 6 - audit store seals, chains, verifies and detects tampering
+  ---
+  duration_ms: 9.928947
+  type: 'test'
+  ...
+# Subtest: engine creates, verifies, imports and resolves a live conflict
+ok 7 - engine creates, verifies, imports and resolves a live conflict
+  ---
+  duration_ms: 4.137485
+  type: 'test'
+  ...
+# Subtest: engine rolls back prior writes when a later entry fails
+ok 8 - engine rolls back prior writes when a later entry fails
+  ---
+  duration_ms: 3.405458
+  type: 'test'
+  ...
+# Subtest: schema entries can participate in different backup/import/export operations
+ok 9 - schema entries can participate in different backup/import/export operations
+  ---
+  duration_ms: 0.839758
+  type: 'test'
+  ...
+# Subtest: import snapshot preflight prevents all writes when a later snapshot fails
+ok 10 - import snapshot preflight prevents all writes when a later snapshot fails
+  ---
+  duration_ms: 2.505742
+  type: 'test'
+  ...
+# Subtest: audit pruning records its own maintenance event and preserves integrity
+ok 11 - audit pruning records its own maintenance event and preserves integrity
+  ---
+  duration_ms: 2.478852
+  type: 'test'
+  ...
+# Subtest: ten-module backup set restores into a fresh instance-equivalent registry
+ok 12 - ten-module backup set restores into a fresh instance-equivalent registry
+  ---
+  duration_ms: 15.816282
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 108.689408

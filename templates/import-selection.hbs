@@ -1,0 +1,43 @@
+<div class="rbf-shell rbf-selection-shell">
+  <header class="rbf-conflict-heading">
+    <h2>{{moduleTitle}}</h2>
+    <p>{{localize "RBF.Selection.Intro"}}</p>
+  </header>
+  <div class="rbf-toolbar">
+    <button type="button" data-action="selectAll">{{localize "RBF.Selection.SelectAll"}}</button>
+    <button type="button" data-action="clearOptional">{{localize "RBF.Selection.ClearOptional"}}</button>
+    <span>{{selectedCount}} / {{totalCount}} selected</span>
+  </div>
+  <div class="rbf-conflict-layout">
+    <aside class="rbf-category-list rbf-scroll" aria-label="Import categories">
+      {{#each categories}}
+      <section class="rbf-category-rule" data-category="{{key}}" style="--rbf-depth: {{depth}}">
+        <strong class="rbf-category-label">{{label}}</strong>
+        <div class="rbf-rule-actions">
+          <button type="button" data-action="selectCategory" data-category="{{key}}">{{localize "RBF.Selection.SelectBranch"}}</button>
+          <button type="button" data-action="clearCategory" data-category="{{key}}">{{localize "RBF.Selection.ClearBranch"}}</button>
+        </div>
+      </section>
+      {{/each}}
+    </aside>
+    <main class="rbf-selection-list rbf-scroll">
+      {{#each rows}}
+      <article class="rbf-card rbf-selection-card {{#if selected}}selected{{/if}}">
+        <div class="rbf-selection-copy">
+          <strong>{{label}}</strong>
+          <small>{{category}} · {{id}}</small>
+          {{#if description}}<p>{{description}}</p>{{/if}}
+          {{#if dependencies}}<small>Dependencies: {{dependencies}}</small>{{/if}}
+        </div>
+        <button type="button" data-action="toggleEntry" data-entry-id="{{id}}" {{#if locked}}disabled{{/if}}>
+          {{#if locked}}Required for partial import{{else}}{{#if selected}}Selected{{else}}Excluded{{/if}}{{/if}}
+        </button>
+      </article>
+      {{/each}}
+    </main>
+  </div>
+  <footer class="rbf-dialog-footer">
+    <button type="button" data-action="cancel">{{localize "RBF.Common.CancelNoChanges"}}</button>
+    <button type="button" data-action="apply">{{localize "RBF.Selection.UseSelection"}}</button>
+  </footer>
+</div>

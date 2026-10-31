@@ -1,0 +1,98 @@
+<div class="rbf-shell density-{{density}}">
+  <nav class="rbf-tabs" aria-label="Backup Framework pages">
+    <button type="button" data-action="tab" data-tab="modules" class="{{#if tabs.modules}}active{{/if}}">{{localize "RBF.Tabs.Modules"}}</button>
+    <button type="button" data-action="tab" data-tab="bulk" class="{{#if tabs.bulk}}active{{/if}}">{{localize "RBF.Tabs.Bulk"}}</button>
+    <button type="button" data-action="tab" data-tab="queue" class="{{#if tabs.queue}}active{{/if}}">{{localize "RBF.Tabs.Queue"}}</button>
+    <button type="button" data-action="tab" data-tab="diagnostics" class="{{#if tabs.diagnostics}}active{{/if}}">{{localize "RBF.Tabs.Diagnostics"}}</button>
+  </nav>
+
+  {{#if tabs.modules}}
+  <section class="rbf-layout">
+    <aside class="rbf-browser rbf-scroll" aria-label="Registered modules">
+      {{#each modules}}
+      <button type="button" class="rbf-module-row {{#if active}}active{{/if}}" data-action="selectModule" data-module-id="{{moduleId}}">
+        <strong>{{title}}</strong><small>{{moduleId}}</small>
+      </button>
+      {{else}}<p class="rbf-empty">{{localize "RBF.Bulk.NoIntegrations"}}</p>{{/each}}
+    </aside>
+    <main class="rbf-main rbf-scroll">
+      {{#if selected}}
+      <article class="rbf-card rbf-module-card">
+        <header><div><h2>{{selected.title}}</h2><code>{{selected.moduleId}}</code></div></header>
+        <p>{{selected.description}}</p>
+        <div class="rbf-chip-row">
+          {{#each selected.capabilities}}<span class="rbf-chip">{{this}}</span>{{/each}}
+        </div>
+        <div class="rbf-actions">
+          {{#if selected.canBackup}}<button type="button" data-action="backup" data-module-id="{{selected.moduleId}}"><i class="fa-solid fa-box-archive"></i> {{localize "RBF.Actions.Backup"}}</button>{{/if}}
+          {{#if selected.canExport}}<button type="button" data-action="exportArchive" data-module-id="{{selected.moduleId}}"><i class="fa-solid fa-file-export"></i> {{localize "RBF.Actions.Export"}}</button>{{/if}}
+          {{#if selected.canImport}}<button type="button" data-action="chooseImport"><i class="fa-solid fa-file-import"></i> {{localize "RBF.Actions.Import"}}</button>{{/if}}
+        </div>
+      </article>
+      {{/if}}
+    </main>
+  </section>
+  {{/if}}
+
+  {{#if tabs.bulk}}
+  <section class="rbf-bulk rbf-scroll">
+    <div class="rbf-dropzone" tabindex="0">
+      <i class="fa-solid fa-cloud-arrow-up"></i>
+      <strong>{{localize "RBF.Bulk.DropTitle"}}</strong>
+      <span>{{localize "RBF.Bulk.DropHint"}}</span>
+      <button type="button" data-action="chooseImport">{{localize "RBF.Bulk.ChooseFiles"}}</button>
+    </div>
+    <div class="rbf-toolbar">
+      <button type="button" data-action="selectAllBulk">{{localize "RBF.Bulk.SelectAllCapable"}}</button>
+      <button type="button" data-action="clearBulk">{{localize "RBF.Bulk.ClearSelection"}}</button>
+    </div>
+    <div class="rbf-grid">
+      {{#each modules}}
+      <article class="rbf-card rbf-select-card {{#if selected}}selected{{/if}}">
+        <div><strong>{{title}}</strong><small>{{moduleId}}</small></div>
+        <button type="button" data-action="toggleBulk" data-module-id="{{moduleId}}" {{#unless canBackup}}{{#unless canExport}}disabled{{/unless}}{{/unless}}>{{#if selected}}{{localize "RBF.Common.Selected"}}{{else}}{{localize "RBF.Common.Select"}}{{/if}}</button>
+      </article>
+      {{/each}}
+    </div>
+    <div class="rbf-footer-actions">
+      <button type="button" data-action="bulkBackup"><i class="fa-solid fa-boxes-stacked"></i> {{localize "RBF.Actions.BulkBackup"}}</button>
+      <button type="button" data-action="bulkExport"><i class="fa-solid fa-file-export"></i> {{localize "RBF.Bulk.ExportSelected"}}</button>
+    </div>
+  </section>
+  {{/if}}
+
+  {{#if tabs.queue}}
+  <section class="rbf-scroll">
+    <div class="rbf-toolbar"><button type="button" data-action="processQueue">{{localize "RBF.Actions.ProcessQueue"}}</button><button type="button" data-action="clearQueue">{{localize "RBF.Actions.ClearQueue"}}</button></div>
+    <div class="rbf-grid">
+      {{#each queue}}
+      <article class="rbf-card rbf-queue-card">
+        <strong>{{name}}</strong>
+        <span>{{moduleId}} · {{operation}}</span>
+        <small>{{selectionLabel}} · {{status}}</small>
+        <div class="rbf-actions">{{#if customizable}}<button type="button" data-action="customizeImport" data-queue-index="{{index}}">{{localize "RBF.Bulk.Customize"}}</button>{{/if}}<button type="button" data-action="removeQueue" data-queue-index="{{index}}">{{localize "RBF.Common.Remove"}}</button></div>
+      </article>
+      {{else}}<p class="rbf-empty">{{localize "RBF.Bulk.QueueEmpty"}}</p>{{/each}}
+    </div>
+  </section>
+  {{/if}}
+
+  {{#if tabs.diagnostics}}
+  <section class="rbf-scroll">
+    <div class="rbf-toolbar">
+      <button type="button" data-action="verifyAudit">{{localize "RBF.Actions.VerifyAudit"}}</button>
+      <button type="button" data-action="pruneAudit">{{localize "RBF.Actions.PruneAudit"}}</button>
+      <button type="button" data-action="resetGeometry">{{localize "RBF.Diagnostics.ResetGeometry"}}</button>
+    </div>
+    <div class="rbf-audit-list">
+      {{#each auditEntries}}
+      <article class="rbf-card rbf-audit-row">
+        <div><strong>{{timestamp}}</strong><span>{{moduleId}} · {{status}}</span><small>{{changes.length}} change(s)</small></div>
+        <button type="button" data-action="downloadAudit" data-audit-id="{{id}}">{{localize "RBF.Actions.DownloadAudit"}}</button>
+      </article>
+      {{else}}<p class="rbf-empty">{{localize "RBF.Diagnostics.NoAudit"}}</p>{{/each}}
+    </div>
+  </section>
+  {{/if}}
+  <input data-rbf-file-input type="file" accept=".zip,application/zip" multiple hidden>
+</div>

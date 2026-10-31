@@ -1,0 +1,115 @@
+{
+  "RBF": {
+    "Title": "Runyth Backup Framework",
+    "SceneControl": "Backup Framework",
+    "Tabs": {
+      "Modules": "Registered Modules",
+      "Bulk": "Bulk Operations",
+      "Queue": "Import Queue",
+      "Diagnostics": "Diagnostics"
+    },
+    "Actions": {
+      "Backup": "Create Backup",
+      "Export": "Export",
+      "Import": "Import ZIP",
+      "BulkBackup": "Back Up Selected",
+      "ProcessQueue": "Process Import Queue",
+      "ClearQueue": "Clear Queue",
+      "DownloadAudit": "Download Audit Log",
+      "PruneAudit": "Prune Audit Logs",
+      "VerifyAudit": "Verify Audit Store"
+    },
+    "Settings": {
+      "ArchiveFilenameRegex": "Archive filename regular expression",
+      "ArchiveFilenameRegexHint": "Regular expression used as a first-stage bulk-upload filename gate. The embedded archive manifest remains authoritative.",
+      "ModuleIncludeRegex": "Registered module include regular expression",
+      "ModuleIncludeRegexHint": "Only matching module IDs are shown. Empty means all registered modules.",
+      "ModuleExcludeRegex": "Registered module exclude regular expression",
+      "ModuleExcludeRegexHint": "Matching module IDs are hidden from the dashboard, but remain registered in the API.",
+      "MaxArchiveMiB": "Maximum archive size (MiB)",
+      "MaxEntryMiB": "Maximum archive entry size (MiB)",
+      "MaxEntries": "Maximum archive entries",
+      "ConcurrentReads": "Concurrent capture/read operations",
+      "DefaultConflictPolicy": "Default conflict policy",
+      "AuditRetention": "Audit retention policy",
+      "AuditRetentionHint": "Example: 0-7d=all;8-30d=daily;31-180d=weekly;181-730d=monthly;>730d=yearly",
+      "AutoReload": "Reload after successful bulk import",
+      "ConfirmWrites": "Confirm before applying imports",
+      "DashboardDensity": "Dashboard density",
+      "AutoProcessDrop": "Automatically process dropped ZIPs",
+      "AutoProcessDropHint": "When enabled, a clean bulk drop proceeds directly to validation, one bulk confirmation, import, and optional reload. Disable to customize partial selections before processing.",
+      "StopBulkOnFailure": "Stop bulk import on first failure",
+      "StopBulkOnFailureHint": "When enabled, later queued archives are not applied after an earlier archive fails. Completed archives remain committed and independently audited."
+    },
+    "Common": {
+      "CancelNoChanges": "Cancel / no changes",
+      "Continue": "Continue",
+      "Reset": "Reset decisions",
+      "Select": "Select",
+      "Selected": "Selected",
+      "Remove": "Remove",
+      "Uncategorized": "Uncategorized",
+      "FullImport": "Full import",
+      "ExplicitlySelected": "{count} explicitly selected"
+    },
+    "Bulk": {
+      "DropTitle": "Drop one or many framework ZIPs here",
+      "DropHint": "Each ZIP is inspected, integrity-checked and routed by its embedded manifest.",
+      "ChooseFiles": "Choose ZIP files",
+      "SelectAllCapable": "Select all capable",
+      "ClearSelection": "Clear selection",
+      "ExportSelected": "Export selected",
+      "Customize": "Customize / partial import",
+      "QueueEmpty": "The import queue is empty.",
+      "NoIntegrations": "No integrations are registered."
+    },
+    "Diagnostics": {
+      "ResetGeometry": "Reset window layout",
+      "NoAudit": "No audit logs have been recorded.",
+      "Changes": "{count} change(s)"
+    },
+    "Conflict": {
+      "Title": "Resolve Import Conflicts",
+      "Intro": "Resolve every differing element before any import transaction is applied.",
+      "KeepBranch": "Keep branch",
+      "MergeBranch": "Merge branch",
+      "ImportBranch": "Import branch",
+      "ArchivePath": "Archive path",
+      "LiveTarget": "Live target",
+      "Reason": "Reason",
+      "Live": "Live",
+      "Incoming": "Incoming",
+      "KeepLive": "Keep live",
+      "Merge": "Merge",
+      "UseImport": "Use import"
+    },
+    "Selection": {
+      "Title": "Choose Import Contents",
+      "Intro": "Choose the archive elements to import. Required dependencies are added automatically; locked elements are declared non-partial by the integration.",
+      "SelectAll": "Select all",
+      "ClearOptional": "Clear optional",
+      "SelectBranch": "Select branch",
+      "ClearBranch": "Clear branch",
+      "Dependencies": "Dependencies: {dependencies}",
+      "UseSelection": "Use selection"
+    },
+    "Dialogs": {
+      "BulkTitle": "Apply bulk import",
+      "BulkContent": "Apply {archives} archive(s) containing {elements} selected element(s)? Each archive is transactional and independently audited.",
+      "ApplyImport": "Apply import",
+      "ReloadTitle": "Reload Foundry",
+      "ReloadContent": "All prepared imports finished successfully. Reload the world now?",
+      "Reload": "Reload",
+      "NotNow": "Not now",
+      "PruneTitle": "Prune audit logs",
+      "PruneContent": "Apply the configured retention policy and permanently remove audit entries outside it?"
+    },
+    "Notifications": {
+      "BackupCreated": "Backup created.",
+      "ExportCreated": "Export created.",
+      "AuditVerified": "Audit store integrity verified.",
+      "AuditFailed": "Audit store integrity check failed.",
+      "LayoutReset": "Dashboard layout reset."
+    }
+  }
+}
