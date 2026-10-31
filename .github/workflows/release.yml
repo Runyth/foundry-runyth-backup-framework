@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+      - name: Verify and build
+        run: npm run check
+      - name: Publish release artifacts
+        uses: softprops/action-gh-release@e598afbe1493e6b1bafb1f389cabb956eab91231
+        with:
+          files: |
+            dist/runyth-backup-framework-v*-mod.zip
+            dist/runyth-backup-framework-v*-src.zip
+            dist/runyth-backup-framework-v*-doc.zip
+            dist/runyth-backup-framework-v*-SHA256SUMS.txt
+            dist/runyth-backup-framework-v*-build-report.json
+            module.json
