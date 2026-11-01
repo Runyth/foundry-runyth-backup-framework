@@ -11,6 +11,7 @@ const moduleId = "runyth-backup-framework";
 const publicOrigin = `https://github.com/Runyth/foundry-${moduleId}`;
 const header = "// SPDX-License-Identifier: AGPL-3.0-or-later\n// Copyright (C) 2026 Daniel Braniewski. See the LICENSE file for rights and obligations.\n";
 const licenceLine = `Copyright © 2026  [Daniel ${composed("Branie", "wski")}](https://brani.dev/)`;
+const holderFragment = composed("// Copyright (C) 2026 Daniel ", "Brani", "ewski. See the LICENSE file for rights and obligations.");
 const identityPatterns = [
   new RegExp(composed("aki", "to"), "iu"),
   new RegExp(composed("Branie", "wski"), "iu"),
@@ -54,7 +55,8 @@ for (const file of await walk(root)) {
     if (!source.startsWith(header)) failures.push(`${file.path}: missing AGPL source header.`);
   }
   const text = await readFile(file.absolute);
-  const decoded = file.path === "README.md" ? text.toString("utf8").replace(licenceLine, "") : text.toString("latin1");
+  let decoded = text.toString("latin1").replace(holderFragment, "");
+  if (file.path === "README.md") decoded = decoded.replace(licenceLine, "");
   if (identityPatterns.some((pattern) => pattern.test(decoded))) failures.push(`${file.path}: publication identity material.`);
 }
 
