@@ -12,6 +12,7 @@ const publicOrigin = `https://github.com/Runyth/foundry-${moduleId}`;
 const header = "// SPDX-License-Identifier: AGPL-3.0-or-later\n// Copyright (C) 2026 Daniel Braniewski. See the LICENSE file for rights and obligations.\n";
 const licenceLine = `Copyright © 2026  [Daniel ${composed("Branie", "wski")}](https://brani.dev/)`;
 const holderFragment = composed("// Copyright (C) 2026 Daniel ", "Brani", "ewski. See the LICENSE file for rights and obligations.");
+const noticeHolder = composed("Copyright (C) 2026 Daniel ", "Brani", "ewski\n");
 const identityPatterns = [
   new RegExp(composed("aki", "to"), "iu"),
   new RegExp(composed("Branie", "wski"), "iu"),
@@ -27,7 +28,7 @@ const manifest = await readJson(resolve(root, "module.json"));
 const packageJson = await readJson(resolve(root, "package.json"));
 if (manifest.id !== moduleId) failures.push("Manifest id is invalid.");
 if (manifest.title !== "Runyth Backup Framework") failures.push("Manifest title is invalid.");
-if (manifest.version !== "1.0.0" || packageJson.version !== "1.0.0") failures.push("Version must be 1.0.0.");
+if (manifest.version !== "1.0.1" || packageJson.version !== "1.0.1") failures.push("Version must be 1.0.1.");
 if (packageJson.license !== "AGPL-3.0-or-later") failures.push("Package licence must be AGPL-3.0-or-later.");
 if (manifest.license !== "LICENSE") failures.push("Manifest licence must name LICENSE.");
 if (manifest.authors?.[0]?.name !== "Runyth" || manifest.authors?.[0]?.url !== "https://github.com/Runyth") {
@@ -55,8 +56,8 @@ for (const file of await walk(root)) {
     if (!source.startsWith(header)) failures.push(`${file.path}: missing AGPL source header.`);
   }
   const text = await readFile(file.absolute);
-  let decoded = text.toString("latin1").replace(holderFragment, "");
-  if (file.path === "README.md") decoded = decoded.replace(licenceLine, "");
+  let decoded = text.toString("utf8").replaceAll(holderFragment, "").replaceAll(noticeHolder, "");
+  if (file.path === "README.md") decoded = decoded.replaceAll(licenceLine, "");
   if (identityPatterns.some((pattern) => pattern.test(decoded))) failures.push(`${file.path}: publication identity material.`);
 }
 

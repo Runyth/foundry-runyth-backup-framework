@@ -37,6 +37,6 @@
   "readme": "README.md",
   "url": "https://github.com/Runyth/foundry-runyth-backup-framework",
   "manifest": "https://github.com/Runyth/foundry-runyth-backup-framework/releases/latest/download/module.json",
-  "download": "https://github.com/Runyth/foundry-runyth-backup-framework/releases/download/v1.0.0/runyth-backup-framework-v1.0.0-mod.zip",
+  "download": "https://github.com/Runyth/foundry-runyth-backup-framework/releases/download/v1.0.1/runyth-backup-framework-v1.0.1-mod.zip",
   "changelog": "CHANGELOG.md"
 }
