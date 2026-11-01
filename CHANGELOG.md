@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1 - 2026-11-01
+
+### Fixed
+
+- Attributed the source licence headers to the licence holder used by the README Licence chapter so every module surface carries the same copyright holder.
+
 ## [1.0.0] - 2026-10-31
 
 - Added generic integration registry with independent Backup, Import and Export capability declarations plus an explicit API-version compatibility gate.

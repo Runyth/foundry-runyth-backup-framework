@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Copyright (C) 2026 Runyth. See the LICENSE file for rights and obligations.
+// Copyright (C) 2026 Daniel Braniewski. See the LICENSE file for rights and obligations.
 import { readFile } from "node:fs/promises";
 import { extname, resolve } from "node:path";
 import { isExcludedSourcePath, readJson, walk } from "./lib/files.mjs";
@@ -9,7 +9,7 @@ const root = resolve(import.meta.dirname, "..");
 const failures = [];
 const moduleId = "runyth-backup-framework";
 const publicOrigin = `https://github.com/Runyth/foundry-${moduleId}`;
-const header = "// SPDX-License-Identifier: AGPL-3.0-or-later\n// Copyright (C) 2026 Runyth. See the LICENSE file for rights and obligations.\n";
+const header = "// SPDX-License-Identifier: AGPL-3.0-or-later\n// Copyright (C) 2026 Daniel Braniewski. See the LICENSE file for rights and obligations.\n";
 const licenceLine = `Copyright © 2026  [Daniel ${composed("Branie", "wski")}](https://brani.dev/)`;
 const identityPatterns = [
   new RegExp(composed("aki", "to"), "iu"),

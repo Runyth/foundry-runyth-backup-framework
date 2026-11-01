@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Copyright (C) 2026 Runyth. See the LICENSE file for rights and obligations.
+// Copyright (C) 2026 Daniel Braniewski. See the LICENSE file for rights and obligations.
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -115,7 +115,7 @@ test("engine creates, verifies, imports and resolves a live conflict", async () 
   registry.register({
     moduleId: "example-module",
     title: "Example Module",
-    moduleVersion: "1.0.0",
+    moduleVersion: "1.0.1",
     capabilities: ["backup", "import", "export"],
     schema: {
       id: "example-schema",
@@ -153,7 +153,7 @@ test("engine creates, verifies, imports and resolves a live conflict", async () 
   const engine = new BackupEngine({ registry, drivers, audit, compat, settings: settings() });
 
   const created = await engine.createArchive("example-module", { save: false });
-  assert.match(created.filename, /^example-module-backup-1\.0\.0-/);
+  assert.match(created.filename, /^example-module-backup-1\.0\.1-/);
   assert.equal(await sha256(created.bytes), await sha256(created.bytes));
 
   live = { answer: 7 };
@@ -172,7 +172,7 @@ test("engine rolls back prior writes when a later entry fails", async () => {
   const registry = new RegistrationRegistry();
   registry.register({
     moduleId: "rollback-module",
-    moduleVersion: "1.0.0",
+    moduleVersion: "1.0.1",
     capabilities: ["backup", "import"],
     schema: {
       id: "rollback-schema",
@@ -207,7 +207,7 @@ test("schema entries can participate in different backup/import/export operation
   const registry = new RegistrationRegistry();
   const registration = registry.register({
     moduleId: "operation-module",
-    moduleVersion: "1.0.0",
+    moduleVersion: "1.0.1",
     capabilities: ["backup", "import", "export"],
     schema: {
       id: "operation-schema",
@@ -230,7 +230,7 @@ test("import snapshot preflight prevents all writes when a later snapshot fails"
   const registry = new RegistrationRegistry();
   registry.register({
     moduleId: "preflight-module",
-    moduleVersion: "1.0.0",
+    moduleVersion: "1.0.1",
     capabilities: ["backup", "import"],
     schema: {
       id: "preflight-schema",
@@ -294,7 +294,7 @@ test("ten-module backup set restores into a fresh instance-equivalent registry",
       const moduleId = `bulk-module-${index}`;
       registry.register({
         moduleId,
-        moduleVersion: "1.0.0",
+        moduleVersion: "1.0.1",
         capabilities: ["backup", "import"],
         schema: {
           id: `${moduleId}-schema`,

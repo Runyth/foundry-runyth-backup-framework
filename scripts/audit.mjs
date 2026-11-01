@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Copyright (C) 2026 Runyth. See the LICENSE file for rights and obligations.
+// Copyright (C) 2026 Daniel Braniewski. See the LICENSE file for rights and obligations.
 import { AUDIT_FORMAT_ID, AUDIT_FORMAT_VERSION, MODULE_ID } from "./constants.mjs";
 import { digestObject } from "./integrity.mjs";
 import { selectRetained } from "./retention.mjs";

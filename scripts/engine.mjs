@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Copyright (C) 2026 Runyth. See the LICENSE file for rights and obligations.
+// Copyright (C) 2026 Daniel Braniewski. See the LICENSE file for rights and obligations.
 import { API_VERSION, FORMAT_ID, FORMAT_VERSION, MANIFEST_PATH, MODULE_VERSION } from "./constants.mjs";
 import { decodeValue, encodeValue } from "./drivers.mjs";
 import { digestObject, sha256 } from "./integrity.mjs";

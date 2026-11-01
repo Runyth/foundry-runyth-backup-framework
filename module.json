@@ -2,7 +2,7 @@
   "id": "runyth-backup-framework",
   "title": "Runyth Backup Framework",
   "description": "Generic Backup, Import and Export framework for Foundry Virtual Tabletop modules.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "authors": [
     {
       "name": "Runyth",
