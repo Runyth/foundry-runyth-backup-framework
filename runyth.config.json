@@ -59,7 +59,7 @@
   "template": {
     "repository": "Runyth/template-foundry-module",
     "source": false,
-    "version": "1.1.6"
+    "version": "1.1.7"
   },
   "validation": {
     "allowFindings": [],
