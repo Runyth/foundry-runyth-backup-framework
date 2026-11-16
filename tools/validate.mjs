@@ -1,74 +1,90 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2026 Daniel Braniewski. See the LICENSE file for rights and obligations.
 import { readFile } from "node:fs/promises";
-import { extname, resolve } from "node:path";
-import { isExcludedSourcePath, readJson, walk } from "./lib/files.mjs";
+import path from "node:path";
+import { PROJECT_ROOT, pathExists, readJson, walkFiles } from "./lib/project.mjs";
+import { flattenJson } from "./lib/text.mjs";
+import { matchesAny } from "./lib/glob.mjs";
 
-const composed = (...parts) => parts.join("");
-const root = resolve(import.meta.dirname, "..");
-const failures = [];
-const moduleId = "runyth-backup-framework";
-const publicOrigin = `https://github.com/Runyth/foundry-${moduleId}`;
-const header = "// SPDX-License-Identifier: AGPL-3.0-or-later\n// Copyright (C) 2026 Daniel Braniewski. See the LICENSE file for rights and obligations.\n";
-const licenceLine = `Copyright © 2026  [Daniel ${composed("Branie", "wski")}](https://brani.dev/)`;
-const holderFragment = composed("// Copyright (C) 2026 Daniel ", "Brani", "ewski. See the LICENSE file for rights and obligations.");
-const noticeHolder = composed("Copyright (C) 2026 Daniel ", "Brani", "ewski\n");
-const identityPatterns = [
-  new RegExp(composed("aki", "to"), "iu"),
-  new RegExp(composed("Branie", "wski"), "iu"),
-  new RegExp(composed("akki", "@"), "iu"),
-  new RegExp(composed("ik", "\\.me"), "iu"),
-  new RegExp(composed("/mnt", "/"), "u"),
-  new RegExp(composed("/home", "/"), "u"),
-  new RegExp(composed("/Users", "/"), "u"),
-  new RegExp(composed("AC09E018", "1960A982"), "u"),
-];
+const errors = [];
+const warnings = [];
+const config = await readJson("runyth.config.json");
+const manifest = await readJson("module.json");
+const packageJson = await readJson("package.json");
 
-const manifest = await readJson(resolve(root, "module.json"));
-const packageJson = await readJson(resolve(root, "package.json"));
-if (manifest.id !== moduleId) failures.push("Manifest id is invalid.");
-if (manifest.title !== "Runyth Backup Framework") failures.push("Manifest title is invalid.");
-if (manifest.version !== "1.0.1" || packageJson.version !== "1.0.1") failures.push("Version must be 1.0.1.");
-if (packageJson.license !== "AGPL-3.0-or-later") failures.push("Package licence must be AGPL-3.0-or-later.");
-if (manifest.license !== "LICENSE") failures.push("Manifest licence must name LICENSE.");
-if (manifest.authors?.[0]?.name !== "Runyth" || manifest.authors?.[0]?.url !== "https://github.com/Runyth") {
-  failures.push("Public author must be Runyth with the organisation URL.");
+function requireCondition(condition, message) {
+  if (!condition) errors.push(message);
 }
-if (manifest.url !== publicOrigin) failures.push("Manifest url must use the public foundry- repository.");
-if (manifest.manifest !== `${publicOrigin}/releases/latest/download/module.json`) failures.push("Manifest URL is invalid.");
-if (manifest.download !== `${publicOrigin}/releases/download/v${manifest.version}/${moduleId}-v${manifest.version}-mod.zip`) {
-  failures.push("Manifest download URL must name the -mod release archive.");
-}
-if (packageJson.repository?.url !== `${publicOrigin}.git`) failures.push("Package repository URL is invalid.");
-if (manifest.compatibility?.minimum !== "13" || manifest.compatibility?.verified !== "13" || manifest.compatibility?.maximum !== "13") {
-  failures.push("Foundry compatibility must remain the tested v13 pin.");
-}
-if (manifest.esmodules?.[0] !== "scripts/main.mjs") failures.push("Runtime entry is invalid.");
-if ((manifest.relationships?.requires ?? []).length !== 0) failures.push("The framework must not require another module.");
 
-const readme = await readFile(resolve(root, "README.md"), "utf8");
-if (!readme.includes("## Licence\n") || !readme.includes(licenceLine)) failures.push("README licence chapter is not the required notice.");
+requireCondition(config.schemaVersion === 1, "runyth.config.json schemaVersion must be 1.");
+requireCondition(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u.test(manifest.id ?? ""), "module.json id must be lowercase kebab-case.");
+requireCondition(typeof manifest.title === "string" && manifest.title.length > 0, "module.json title is required.");
+requireCondition(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u.test(manifest.version ?? ""), "module.json version must be semantic.");
+requireCondition(manifest.compatibility?.minimum !== undefined, "Foundry compatibility.minimum is required.");
+requireCondition(manifest.compatibility?.verified !== undefined, "Foundry compatibility.verified is required.");
+requireCondition(packageJson.type === "module", "package.json type must be module.");
+if (config.validation.requireVersionParity) {
+  requireCondition(packageJson.version === manifest.version, "package.json and module.json versions differ.");
+}
+if (!config.template.source && config.validation.requireRepositoryUrls) {
+  const expectedRepository = `https://github.com/${config.module.repository}`;
+  requireCondition(manifest.url === expectedRepository, `module.json url must be ${expectedRepository}.`);
+  requireCondition(manifest.manifest?.startsWith(`${expectedRepository}/releases/`), "module.json manifest URL must use GitHub Releases.");
+  requireCondition(manifest.download?.includes(`/v${manifest.version}/`), "module.json download URL must contain the current version tag.");
+}
 
-for (const file of await walk(root)) {
-  if (isExcludedSourcePath(file.path)) continue;
-  if (extname(file.path) === ".mjs") {
-    const source = await readFile(file.absolute, "utf8");
-    if (!source.startsWith(header)) failures.push(`${file.path}: missing AGPL source header.`);
+const referencedPaths = new Set();
+for (const field of ["esmodules", "scripts", "styles"]) {
+  for (const value of manifest[field] ?? []) referencedPaths.add(value);
+}
+for (const language of manifest.languages ?? []) referencedPaths.add(language.path);
+for (const pack of manifest.packs ?? []) if (pack.path) referencedPaths.add(pack.path);
+for (const relativePath of referencedPaths) {
+  requireCondition(await pathExists(path.join(PROJECT_ROOT, relativePath)), `Manifest path does not exist: ${relativePath}`);
+}
+
+const languages = new Map((manifest.languages ?? []).map((entry) => [entry.lang, entry.path]));
+for (const locale of config.validation.requiredLocales ?? []) {
+  requireCondition(languages.has(locale), `Required locale is absent from module.json: ${locale}`);
+}
+if (config.validation.requireLocaleParity && languages.size > 1) {
+  const localeKeys = [];
+  for (const [locale, relativePath] of [...languages.entries()].sort()) {
+    const document = JSON.parse(await readFile(path.join(PROJECT_ROOT, relativePath), "utf8"));
+    localeKeys.push([locale, new Set(flattenJson(document).keys())]);
   }
-  const text = await readFile(file.absolute);
-  let decoded = text.toString("utf8").replaceAll(holderFragment, "").replaceAll(noticeHolder, "");
-  if (file.path === "README.md") decoded = decoded.replaceAll(licenceLine, "");
-  if (identityPatterns.some((pattern) => pattern.test(decoded))) failures.push(`${file.path}: publication identity material.`);
+  const [baseLocale, baseKeys] = localeKeys[0];
+  for (const [locale, keys] of localeKeys.slice(1)) {
+    const missing = [...baseKeys].filter((key) => !keys.has(key));
+    const extra = [...keys].filter((key) => !baseKeys.has(key));
+    if (missing.length || extra.length) errors.push(`Localization parity mismatch ${baseLocale}/${locale}: missing=[${missing.join(", ")}], extra=[${extra.join(", ")}].`);
+  }
 }
 
-const scripts = (await walk(resolve(root, "scripts"))).map((file) => file.path);
-const scriptText = (await Promise.all(scripts.map(async (path) => readFile(resolve(root, "scripts", path), "utf8")))).join("\n");
-if (/ApplicationV1|foundry\.appv1|_upload|_browse|_createDirectory/u.test(scriptText)) failures.push("Forbidden Foundry API marker found.");
-if (/https?:\/\//u.test(scriptText)) failures.push("Runtime network URL found.");
-
-if (failures.length) {
-  failures.forEach((failure) => console.error(`- ${failure}`));
-  process.exitCode = 1;
-} else {
-  console.log("Validation gate passed.");
+const files = await walkFiles(PROJECT_ROOT);
+const scriptFiles = files.filter((file) => matchesAny(file, ["**/*.js", "**/*.mjs"]) && !matchesAny(file, ["dist/**", "node_modules/**"]));
+const importPattern = /(?:import|export)\s+(?:[^"']*?\s+from\s+)?["'](\.{1,2}\/[^"']+)["']/gu;
+for (const relativePath of scriptFiles) {
+  const source = await readFile(path.join(PROJECT_ROOT, relativePath), "utf8");
+  for (const match of source.matchAll(importPattern)) {
+    const candidate = path.resolve(PROJECT_ROOT, path.dirname(relativePath), match[1]);
+    const possibilities = [candidate, `${candidate}.js`, `${candidate}.mjs`, path.join(candidate, "index.js")];
+    if (!(await Promise.all(possibilities.map(pathExists))).some(Boolean)) {
+      errors.push(`Unresolved relative import in ${relativePath}: ${match[1]}`);
+    }
+  }
 }
+
+if (!config.template.source) {
+  const placeholderPattern = /runyth[-_ ]module[-_ ]template/giu;
+  for (const relativePath of files.filter((file) => matchesAny(file, ["module.json", "package.json", "scripts/**/*.js", "lang/*.json"]))) {
+    const content = await readFile(path.join(PROJECT_ROOT, relativePath), "utf8");
+    if (placeholderPattern.test(content)) errors.push(`Template identity remains in ${relativePath}. Run npm run bootstrap.`);
+    placeholderPattern.lastIndex = 0;
+  }
+}
+
+for (const warning of warnings) console.warn(`Warning: ${warning}`);
+for (const error of errors) console.error(`Error: ${error}`);
+if (errors.length > 0) process.exitCode = 1;
+else console.log(`Validation passed: ${files.length} repository files, ${scriptFiles.length} JavaScript modules.`);

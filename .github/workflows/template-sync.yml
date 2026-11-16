@@ -1,0 +1,48 @@
+name: Runyth Template Sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 1 * *"
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.repository != 'Runyth/template-foundry-module'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out module repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: module
+      - name: Check out Runyth template
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: Runyth/template-foundry-module
+          ref: master
+          path: template
+      - name: Set up Node.js
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version-file: module/.node-version
+      - name: Apply managed template files
+        working-directory: module
+        run: node tools/template-sync.mjs --source ../template
+      - name: Run quality gate
+        working-directory: module
+        env:
+          # The gate validates the tree before the sync commit is created, so
+          # repository builds that require a clean revision must accept the
+          # pending template changes.
+          RUNYTH_ALLOW_UNCOMMITTED: "1"
+        run: |
+          npm ci --ignore-scripts
+          npm run check
+      - name: Commit synchronized standard
+        working-directory: module
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node tools/commit-sync.mjs

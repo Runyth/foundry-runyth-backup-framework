@@ -7,32 +7,53 @@ on:
 
 permissions:
   contents: write
+  id-token: write
+  attestations: write
+  artifact-metadata: write
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Check out repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          persist-credentials: false
           fetch-depth: 0
+          persist-credentials: false
       - name: Set up Node.js
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
-          node-version: 24
+          node-version-file: .node-version
           cache: npm
       - name: Install dependencies
         run: npm ci --ignore-scripts
-      - name: Verify and build
-        run: npm run check
-      - name: Publish release artifacts
-        uses: softprops/action-gh-release@e598afbe1493e6b1bafb1f389cabb956eab91231
+      - name: Verify tag and build
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: |
+          npm run release:assert
+          npm run check
+      - name: Attest release archives
+        uses: actions/attest@f7c74d28b9d84cb8768d0b8ca14a4bac6ef463e6 # v4.2.0
         with:
-          files: |
-            dist/runyth-backup-framework-v*-mod.zip
-            dist/runyth-backup-framework-v*-src.zip
-            dist/runyth-backup-framework-v*-doc.zip
-            dist/runyth-backup-framework-v*-SHA256SUMS.txt
-            dist/runyth-backup-framework-v*-build-report.json
-            module.json
+          subject-path: |
+            dist/*-mod.zip
+            dist/*-src.zip
+            dist/*-doc.zip
+            dist/*-SHA256SUMS.txt
+            dist/module.json
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "${{ github.ref_name }}"
+          dist/*-mod.zip
+          dist/*-src.zip
+          dist/*-doc.zip
+          dist/*-SHA256SUMS.txt
+          dist/module.json
+          dist/build-report.json
+          --generate-notes
+          --title "${{ github.ref_name }}"
+          --verify-tag

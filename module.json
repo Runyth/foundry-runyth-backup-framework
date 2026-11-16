@@ -1,25 +1,22 @@
 {
-  "id": "runyth-backup-framework",
-  "title": "Runyth Backup Framework",
-  "description": "Generic Backup, Import and Export framework for Foundry Virtual Tabletop modules.",
-  "version": "1.0.1",
   "authors": [
     {
       "name": "Runyth",
       "url": "https://github.com/Runyth"
     }
   ],
+  "changelog": "CHANGELOG.md",
   "compatibility": {
+    "maximum": "13",
     "minimum": "13",
-    "verified": "13",
-    "maximum": "13"
+    "verified": "13"
   },
+  "description": "Generic Backup, Import and Export framework for Foundry Virtual Tabletop modules.",
+  "download": "https://github.com/Runyth/foundry-runyth-backup-framework/releases/download/v1.0.1/runyth-backup-framework-v1.0.1-mod.zip",
   "esmodules": [
     "scripts/main.mjs"
   ],
-  "styles": [
-    "styles/runyth-backup-framework.css"
-  ],
+  "id": "runyth-backup-framework",
   "languages": [
     {
       "lang": "en",
@@ -27,16 +24,19 @@
       "path": "lang/en.json"
     }
   ],
-  "relationships": {
-    "systems": [],
-    "requires": []
-  },
-  "persistentStorage": true,
-  "socket": false,
   "license": "LICENSE",
-  "readme": "README.md",
-  "url": "https://github.com/Runyth/foundry-runyth-backup-framework",
   "manifest": "https://github.com/Runyth/foundry-runyth-backup-framework/releases/latest/download/module.json",
-  "download": "https://github.com/Runyth/foundry-runyth-backup-framework/releases/download/v1.0.1/runyth-backup-framework-v1.0.1-mod.zip",
-  "changelog": "CHANGELOG.md"
+  "persistentStorage": true,
+  "readme": "README.md",
+  "relationships": {
+    "requires": [],
+    "systems": []
+  },
+  "socket": false,
+  "styles": [
+    "styles/runyth-backup-framework.css"
+  ],
+  "title": "Runyth Backup Framework",
+  "url": "https://github.com/Runyth/foundry-runyth-backup-framework",
+  "version": "1.0.1"
 }

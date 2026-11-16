@@ -1,0 +1,75 @@
+{
+  "build": {
+    "exclude": [
+      "**/*.map",
+      "**/*.ts",
+      "**/*.tsx",
+      "**/.DS_Store",
+      "**/Thumbs.db"
+    ],
+    "include": [
+      "module.json",
+      "README.md",
+      "CHANGELOG.md",
+      "LICENSE",
+      "scripts/**",
+      "styles/**",
+      "templates/**",
+      "lang/**",
+      "packs/**",
+      "assets/**",
+      "data/**",
+      "fonts/**",
+      "icons/**",
+      "media/**",
+      "sounds/**",
+      "ui/**",
+      "vendor/**"
+    ],
+    "preBuild": [],
+    "sourceExclude": [
+      ".git/**",
+      ".runyth-template-source/**",
+      "dist/**",
+      "node_modules/**",
+      "coverage/**",
+      ".nyc_output/**",
+      ".cache/**",
+      "*.log",
+      ".env",
+      ".env.*",
+      "**/.DS_Store",
+      "**/Thumbs.db",
+      "reports/**"
+    ]
+  },
+  "module": {
+    "kind": "runtime",
+    "publicApi": true,
+    "repository": "Runyth/foundry-runyth-backup-framework",
+    "systemNeutral": true
+  },
+  "runtimeKit": {
+    "managed": false
+  },
+  "schemaVersion": 1,
+  "sync": {
+    "exclude": []
+  },
+  "template": {
+    "repository": "Runyth/template-foundry-module",
+    "source": false,
+    "version": "1.1.5"
+  },
+  "validation": {
+    "allowFindings": [],
+    "forbidPrivateFoundryApis": true,
+    "forbidSourceMaps": true,
+    "requireLocaleParity": false,
+    "requireRepositoryUrls": true,
+    "requireVersionParity": true,
+    "requiredLocales": [
+      "en"
+    ]
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "entries": [
+    {
+      "mode": "replace",
+      "path": ".editorconfig"
+    },
+    {
+      "mode": "replace",
+      "path": ".gitattributes"
+    },
+    {
+      "mode": "replace",
+      "path": ".github/ISSUE_TEMPLATE/bug.yml"
+    },
+    {
+      "mode": "replace",
+      "path": ".github/ISSUE_TEMPLATE/config.yml"
+    },
+    {
+      "mode": "replace",
+      "path": ".github/ISSUE_TEMPLATE/feature.yml"
+    },
+    {
+      "mode": "replace",
+      "path": ".github/pull_request_template.md"
+    },
+    {
+      "mode": "replace",
+      "path": ".github/workflows/ci.yml"
+    },
+    {
+      "mode": "replace",
+      "path": ".github/workflows/release.yml"
+    },
+    {
+      "mode": "replace",
+      "path": ".github/workflows/template-sync.yml"
+    },
+    {
+      "mode": "merge-ignore",
+      "path": ".gitignore"
+    },
+    {
+      "mode": "replace",
+      "path": ".node-version"
+    },
+    {
+      "mode": "replace",
+      "path": ".npmrc"
+    },
+    {
+      "mode": "replace",
+      "path": ".nvmrc"
+    },
+    {
+      "mode": "replace",
+      "path": ".runyth/template-managed.json"
+    },
+    {
+      "mode": "replace",
+      "path": "AGENTS.md"
+    },
+    {
+      "mode": "replace",
+      "path": "CODE_OF_CONDUCT.md"
+    },
+    {
+      "mode": "replace",
+      "path": "CONTRIBUTING.md"
+    },
+    {
+      "mode": "replace",
+      "path": "SECURITY.md"
+    },
+    {
+      "mode": "replace",
+      "path": "docs/ADOPT_EXISTING_MODULE.md"
+    },
+    {
+      "mode": "replace",
+      "path": "docs/COMMIT_CONVENTIONS.md"
+    },
+    {
+      "mode": "replace",
+      "path": "docs/FOUNDRY_COMPATIBILITY.md"
+    },
+    {
+      "mode": "replace",
+      "path": "docs/MODULE_ADOPTION_MATRIX.md"
+    },
+    {
+      "mode": "replace",
+      "path": "docs/REFERENCES.md"
+    },
+    {
+      "mode": "replace",
+      "path": "docs/RELEASING.md"
+    },
+    {
+      "mode": "replace",
+      "path": "docs/REPOSITORY_STANDARD.md"
+    },
+    {
+      "mode": "replace",
+      "path": "docs/SECURITY_MODEL.md"
+    },
+    {
+      "mode": "replace",
+      "path": "docs/TEMPLATE_SYNC.md"
+    },
+    {
+      "mode": "replace",
+      "path": "docs/TESTING.md"
+    },
+    {
+      "mode": "replace",
+      "path": "mise.toml"
+    },
+    {
+      "mode": "merge-package",
+      "path": "package.json"
+    },
+    {
+      "mode": "sync-tree",
+      "path": "test/runyth"
+    },
+    {
+      "mode": "sync-tree",
+      "path": "tools"
+    }
+  ],
+  "schemaVersion": 1
+}

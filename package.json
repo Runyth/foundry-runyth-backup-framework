@@ -1,23 +1,31 @@
 {
-  "name": "runyth-backup-framework",
-  "version": "1.0.1",
-  "private": true,
   "description": "Generic backup, import and export framework for Foundry Virtual Tabletop modules.",
-  "type": "module",
   "engines": {
     "node": ">=22.13.0 <27"
   },
-  "scripts": {
-    "format:check": "node tools/format.mjs",
-    "test": "node --test tests/*.test.mjs",
-    "validate": "node tools/validate.mjs",
-    "build": "node tools/build.mjs",
-    "verify:release": "node tools/verify-release.mjs",
-    "check": "npm run format:check && npm test && npm run validate && npm run build && npm run verify:release"
-  },
+  "license": "AGPL-3.0-or-later",
+  "name": "runyth-backup-framework",
+  "packageManager": "npm@11.16.0",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/Runyth/foundry-runyth-backup-framework.git"
   },
-  "license": "AGPL-3.0-or-later"
+  "scripts": {
+    "adopt": "node tools/adopt-existing.mjs",
+    "audit": "node tools/audit-foundry.mjs",
+    "bootstrap": "node tools/bootstrap.mjs",
+    "build": "node tools/build.mjs",
+    "check": "node tools/check.mjs",
+    "format": "node tools/format.mjs --write",
+    "format:check": "node tools/format.mjs --check",
+    "release:assert": "node tools/assert-release-tag.mjs",
+    "template:sync": "node tools/template-sync.mjs",
+    "test": "node --test --test-reporter=spec",
+    "validate": "node tools/validate.mjs",
+    "verify:release": "node tools/verify-release.mjs",
+    "version:set": "node tools/set-version.mjs"
+  },
+  "type": "module",
+  "version": "1.0.1"
 }
