@@ -35,16 +35,19 @@ jobs:
       - name: Apply managed template files
         working-directory: module
         run: node tools/template-sync.mjs --source ../template
+      - name: Record the pending sync locally
+        working-directory: module
+        run: |
+          git add -A
+          git -c user.name="Runyth Sync Gate" -c user.email="sync-gate@runyth.invalid" commit --no-verify -m "chore: pending template sync"
       - name: Run quality gate
         working-directory: module
-        env:
-          # The gate validates the tree before the sync commit is created, so
-          # repository builds that require a clean revision must accept the
-          # pending template changes.
-          RUNYTH_ALLOW_UNCOMMITTED: "1"
         run: |
           npm ci --ignore-scripts
           npm run check
+      - name: Restore the uncommitted sync state
+        working-directory: module
+        run: git reset --soft "$GITHUB_SHA"
       - name: Commit synchronized standard
         working-directory: module
         env:
